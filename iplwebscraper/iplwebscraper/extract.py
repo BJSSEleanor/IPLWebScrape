@@ -1,5 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
+import pandas as pd
 
 
 def setup():
@@ -9,72 +11,44 @@ def setup():
     return browser
 
 
-def obtain_columns(batting, columns_list):
-    batting_and_blank = batting[0].find_elements(
-        By.CSS_SELECTOR, "th[class='ds-min-w-max ds-font-bold ds-w-[25%]']"
-    )
-    for col in batting_and_blank:
-        columns_list.append(col.text)
-    r_b_m_4_6s = batting[0].find_elements(
-        By.CSS_SELECTOR, "th[class='ds-min-w-max ds-font-bold ds-text-right ds-w-[8%]']"
-    )
-    for col in r_b_m_4_6s:
-        columns_list.append(col.text)
-    sr = batting[0].find_element(
+def obtain_games(browser):
+    games = browser.find_elements(
         By.CSS_SELECTOR,
-        "th[class='ds-min-w-max ds-font-bold ds-text-right ds-w-[10%]']",
+        "div[class='ds-px-4 ds-py-3']",
     )
-    columns_list.append(sr.text)
+    hrefs = []
+    for game in games:
+        href = (game.find_element(By.CSS_SELECTOR, "*")).get_attribute("href")
+        hrefs.append(href)
+    return hrefs
 
 
-def obtain_rows(batting, rows_list, team_no):
-    team_rows = batting[team_no - 1].find_elements(
-        By.CSS_SELECTOR, "tr[class='ds-border-b ds-border-line ds-text-tight-s']"
-    )
-    for row in team_rows:
-        if "not out" in row.text:
-            split_text = row.text.split("\n")
-            breakdown = [split_text[0]]
-            breakdown.append("not out")
-            breakdown.extend(split_text[1].split()[2:])
-            rows_list.append(breakdown)
-        else:
-            try:
-                breakdown_1 = row.text.split("\n")
-                breakdown_2 = breakdown_1[0:2] + breakdown_1[2].split()
-                rows_list.append(breakdown_2)
-            except:
-                continue
-
-
-def pick_game(browser):
-    game = browser.find_element(
-        By.CSS_SELECTOR,
-        "a[href = '/series/indian-premier-league-2022-1298423/gujarat-titans-vs-rajasthan-royals-final-1312200/full-scorecard']",
-    )
-    browser.get(game.get_attribute("href"))
-    batting = browser.find_elements(
-        By.CSS_SELECTOR,
-        "table[class='ds-w-full ds-table ds-table-xs ds-table-fixed ci-scorecard-table']",
-    )
+def obtain_batters(browser, game):
+    failed_get = True
+    while failed_get:
+        try:
+            browser.get(game)
+            failed_get = False
+        except WebDriverException:
+            failed_get = True
+    batting = pd.concat([pd.read_html(game)[0], pd.read_html(game)[2]])
     return batting
 
 
+def obtain_batting_results():
+    browser = setup()
+    batting_results = pd.DataFrame()
+    games = obtain_games(browser)
+    for game in games:
+        batters = obtain_batters(browser, game)
+        if batting_results.empty is True:
+            batting_results = batters
+        else:
+            batting_results = pd.concat([batting_results, batters])
+    browser.quit()
+    return batting_results
+
+
 if __name__ == "__main__":
-    try:
-        browser = setup()
-
-    except:
-        print("Driver failure")
-
-    else:
-        batting = pick_game(browser)
-        columns_list = []
-        obtain_columns(batting, columns_list)
-        print(columns_list)
-        rows_list = []
-        obtain_rows(batting, rows_list, 1)
-        obtain_rows(batting, rows_list, 2)
-        print(rows_list)
-
-        browser.quit()
+    results = obtain_batting_results()
+    print(results)
