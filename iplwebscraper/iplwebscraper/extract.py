@@ -31,7 +31,7 @@ def obtain_batters(browser, game):
             failed_get = False
         except WebDriverException:
             failed_get = True
-    batting = pd.concat([pd.read_html(game)[0], pd.read_html(game)[2]])
+    batting = pd.concat([pd.read_html(game)[0], pd.read_html(game)[2]], ignore_index=True)
     return batting
 
 
@@ -44,7 +44,7 @@ def obtain_batting_results():
         if batting_results.empty is True:
             batting_results = batters
         else:
-            batting_results = pd.concat([batting_results, batters])
+            batting_results = pd.concat([batting_results, batters], ignore_index=True)
     browser.quit()
     return batting_results
 
