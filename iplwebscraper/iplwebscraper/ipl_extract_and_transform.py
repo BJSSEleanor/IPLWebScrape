@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 
-from extract import obtain_batting_results
+from extract import extract
 from transform import transform
 
 
@@ -14,24 +14,16 @@ dag = DAG(
 )
 
 
-def _obtain_batting_results():
-    data = obtain_batting_results()
-
-
-def _transform():
-    transformed_data = transform(data)
-    
-
 extract_data = PythonOperator(
    task_id="extract_data",
-   python_callable=_obtain_batting_results,
+   python_callable=extract,
    dag=dag,
 )
 
 
 transform_data = PythonOperator(
    task_id="transform_data",
-   python_callable=_transform,
+   python_callable=transform,
    dag=dag,
 )
 

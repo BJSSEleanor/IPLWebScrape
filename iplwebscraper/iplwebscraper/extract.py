@@ -44,12 +44,12 @@ def obtain_batters(browser, game):
     return batting
 
 
-def obtain_batting_results():
+def extract():
     """Calls the setup function. Makes an empty dataframe to hold all of the game information.
     Gets the list of game page hrefs and for each game,
     obtains a dataframe with the two team's batters.
     This dataframe is added to the main dataframe.
-    Returns main dataframe."""
+    Puts dataframe into a csv."""
     browser = setup()
     batting_results = pd.DataFrame()
     games = obtain_games(browser)
@@ -60,9 +60,8 @@ def obtain_batting_results():
         else:
             batting_results = pd.concat([batting_results, batters], ignore_index=True)
     browser.quit()
-    return batting_results
+    batting_results.to_csv("extracted_data.csv", index = False)
 
 
 if __name__ == "__main__":
-    results = obtain_batting_results()
-    print(results)
+    extract()

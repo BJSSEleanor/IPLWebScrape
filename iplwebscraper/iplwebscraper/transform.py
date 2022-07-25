@@ -1,7 +1,7 @@
 """Takes the scraped data, cleans it and
 transforms it into the sums of the columns by batter."""
 import numpy as np
-from extract import obtain_batting_results
+import pandas as pd
 
 
 def clean_columns(data):
@@ -67,15 +67,14 @@ def group(data):
     return grouped_data
 
 
-def transform(data):
-    """Calls the clean function,
-    which is then grouped and returned"""
+def transform():
+    """Loads the cleaned data from the csv,
+    which is then grouped and then saved in another csv."""
+    data = pd.read_csv("extracted_data.csv")
     cleaned_data = clean(data)
     grouped_data = group(cleaned_data)
-    return grouped_data
+    grouped_data.to_csv("transformed_data.csv")
 
 
 if __name__ == "__main__":
-    data = obtain_batting_results()
-    transformed_data = transform(data)
-    print(transformed_data)
+    transform()
