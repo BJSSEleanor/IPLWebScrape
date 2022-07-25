@@ -15,7 +15,9 @@ def clean_columns(data):
 
 def clean_rows(cleaned_data):
     """Drops records which are all nan or not batter information.
-    Replaces any - fields with 0 so not to distrupt later sum function."""
+    Replaces any - fields with 0 so not to distrupt later sum function.
+    Then resets the index from 0, drop = True makes sure the old index is not saved
+    as a column."""
     cleaned_data = cleaned_data.dropna(inplace=False)
     indexes_to_drop = list(
         cleaned_data.loc[cleaned_data["Player"].str.contains(r"Did not bat")].index
@@ -29,6 +31,7 @@ def clean_rows(cleaned_data):
     )
     cleaned_data = cleaned_data.drop(index=indexes_to_drop)
     cleaned_data.replace("-", 0, inplace=True)
+    cleaned_data = cleaned_data.reset_index(drop=True)
     return cleaned_data
 
 
@@ -38,13 +41,8 @@ def add_not_out_column(cleaned_data):
     return cleaned_data
 
 
-def clean(data):
-    """Calls the other cleaning functions.
-    Specifies the column types.
-    Returns the newly cleaned data."""
-    cleaned_data = clean_columns(data)
-    cleaned_data = clean_rows(cleaned_data)
-    cleaned_data = add_not_out_column(cleaned_data)
+def clarify_types(cleaned_data):
+    """Specifies the column types."""
     cleaned_data = cleaned_data.astype(
         {
             "Player": "string",
@@ -58,6 +56,16 @@ def clean(data):
             "Not Out": int,
         }
     )
+    return cleaned_data
+
+
+def clean(data):
+    """Calls the other cleaning functions.
+    Returns the newly cleaned data."""
+    cleaned_data = clean_columns(data)
+    cleaned_data = clean_rows(cleaned_data)
+    cleaned_data = add_not_out_column(cleaned_data)
+    cleaned_data = clarify_types(cleaned_data)
     return cleaned_data
 
 
