@@ -6,7 +6,7 @@ from selenium.common.exceptions import WebDriverException
 import pandas as pd
 
 
-def setup():
+def setup() -> webdriver:
     """Sets up the Chrome webdriver and calls the main IPL page.
     Returns the driver"""
     browser = webdriver.Chrome()
@@ -15,7 +15,7 @@ def setup():
     return browser
 
 
-def obtain_games(browser):
+def obtain_games(browser: webdriver) -> list:
     """Makes a list of all of the game elements and obtains the href for each one.
     Returns the list of href strings for all IPL games"""
     games = browser.find_elements(
@@ -29,7 +29,7 @@ def obtain_games(browser):
     return hrefs
 
 
-def obtain_batters(browser, game):
+def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
     """Gets the specific game page via the href passed into the function.
     While loop will make sure the game page is loaded correctly.
     Pandas reads the html and the two team batter lists are concatenated in a singular dataframe."""

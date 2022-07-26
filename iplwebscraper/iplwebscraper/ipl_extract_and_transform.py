@@ -1,8 +1,9 @@
+"""DAG definition for extract and transform pipeline."""
+# pylint: disable=pointless-statement
 import airflow
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-
 from extract import extract
 from transform import transform
 
@@ -33,5 +34,5 @@ notify = BashOperator(
    bash_command='echo "The Indian Premier League data has been extracted and transformed."',
    dag=dag,
 )
- 
-extract_data >> transform_data >> notify 
+
+extract_data >> transform_data >> notify
