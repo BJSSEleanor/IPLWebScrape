@@ -1,4 +1,15 @@
-"""Tests for the extract function. Calls the actual main page and the first game found."""
+"""
+Tests for the extract function.
+
+Fixtures:
+    browser(None) -> webdriver
+    game(webdriver) -> str
+
+Functions:
+    test_setup(webdriver) -> None
+    test_obtain_games_game_info_found(webdriver) -> None
+    test_obtain_batters(None) -> None
+"""
 # pylint: disable=redefined-outer-name
 import pytest
 from iplwebscraper.extract import (
@@ -10,31 +21,61 @@ from iplwebscraper.extract import (
 
 @pytest.fixture
 def browser():
-    """Fixture for calling the main page"""
+    """
+    Sets a fixture webdriver call set on the main IPL page.
+        Parameters:
+                None.
+        Returns:
+                browser (webdriver): A Chrome webdriver set on the main IPL page.
+    """
     browser = setup()
     return browser
 
 
 def test_setup(browser):
-    """Test the setup function and check Chrome webdriver and main IPL call page doesn't fail"""
+    """
+    Tests the fixture webdriver get does not fail.
+        Parameters:
+                browser(webdriver) -> A Chrome webdriver set on the main IPL page.
+        Returns:
+                None
+    """
     assert browser is not None
 
 
 def test_obtain_games_game_info_found(browser):
-    """Test that at least something is obtained when calling obtain_games"""
+    """
+    Tests the calls for individual games obtains some hrefs.
+        Parameters:
+                browser(webdriver) -> A Chrome webdriver set on the main IPL page.
+        Returns:
+                None
+    """
     games = obtain_games(browser)
     assert len(games) > 0
 
 
 @pytest.fixture
 def game(browser):
-    """Fixture for obtaining the href for the first game."""
+    """
+    Sets a fixture webdriver call set on the first game page.
+        Parameters:
+                None.
+        Returns:
+                browser (webdriver): A Chrome webdriver set on the first game page.
+    """
     games = obtain_games(browser)
     game = games[0]
     return game
 
 
 def test_obtain_batters(browser, game):
-    """Tests if a dataframe with the expected shape is obtained from the first href."""
+    """
+    Tests if a dataframe with the expected shape is obtained from the first href.
+        Parameters:
+                browser(webdriver) -> A Chrome webdriver set on the first IPL game.
+        Returns:
+                None
+    """
     batters = obtain_batters(browser, game)
     assert batters.shape == (35, 10)
