@@ -1,12 +1,17 @@
 """DAG definition for extract and transform pipeline.
 """
 # pylint: disable=pointless-statement
-from ipaddress import ip_address
 import airflow
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
 import pandas as pd
+
+import os, sys
+
+currentdir = os.path.dirname(os.path.realpath(__file__))
+parentdir = os.path.dirname(currentdir)
+sys.path.append(parentdir)
 
 from src.extract import extract
 from src.transform import transform

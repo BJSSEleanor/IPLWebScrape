@@ -9,6 +9,9 @@ Functions:
 
 """
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 import pandas as pd
@@ -23,7 +26,9 @@ def setup() -> webdriver:
     Returns:
         webdriver: A webdriver set on the main IPL page.
     """
-    browser = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    browser = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=chrome_options)
     url = "https://www.espncricinfo.com/series/indian-premier-league-2022-1298423/match-results"
     browser.get(url)
     return browser
