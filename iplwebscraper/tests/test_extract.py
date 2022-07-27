@@ -15,7 +15,7 @@ import pytest
 from iplwebscraper.extract import (
     obtain_batters,
     setup,
-    obtain_games,
+    obtain_games
 )
 
 

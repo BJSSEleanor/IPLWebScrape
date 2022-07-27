@@ -109,7 +109,3 @@ def extract():
     batting_results = obtain_batting_results(browser, games)
     browser.quit()
     batting_results.to_csv("./data/extracted_data.csv", index=False)
-
-
-if __name__ == "__main__":
-    extract()

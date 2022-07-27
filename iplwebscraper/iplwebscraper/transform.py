@@ -192,7 +192,3 @@ def obtain_and_transform():
     data = pd.read_csv("./data/extracted_data.csv")
     transformed_data = transform(data)
     transformed_data.to_csv("./data/transformed_data.csv")
-
-
-if __name__ == "__main__":
-    obtain_and_transform()
