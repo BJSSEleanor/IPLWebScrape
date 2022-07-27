@@ -1,4 +1,5 @@
-"""DAG definition for extract and transform pipeline."""
+"""DAG definition for extract and transform pipeline.
+"""
 # pylint: disable=pointless-statement
 import airflow
 from airflow import DAG
