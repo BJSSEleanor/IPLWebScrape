@@ -26,7 +26,7 @@ import pytest
 import pandas as pd
 from pandas.testing import assert_frame_equal
 import numpy as np
-from iplwebscraper.transform import (
+from src.transform import (
     drop_columns,
     rename_columns,
     clean_rows,

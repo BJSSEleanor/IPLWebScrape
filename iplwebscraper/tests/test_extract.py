@@ -12,7 +12,7 @@ Functions:
 """
 # pylint: disable=redefined-outer-name
 import pytest
-from iplwebscraper.extract import (
+from src.extract import (
     obtain_batters,
     setup,
     obtain_games
