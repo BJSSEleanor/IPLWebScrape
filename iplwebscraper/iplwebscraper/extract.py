@@ -15,12 +15,13 @@ import pandas as pd
 
 
 def setup() -> webdriver:
-    """
-    Sets up the Chrome webdriver and calls the main IPL page.
-        Parameters:
-                None.
-        Returns:
-                browser (webdriver): A webdriver set on the main IPL page.
+    """Sets up the Chrome webdriver and calls the main IPL page.
+
+    Args:
+        None.
+
+    Returns:
+        webdriver: A webdriver set on the main IPL page.
     """
     browser = webdriver.Chrome()
     url = "https://www.espncricinfo.com/series/indian-premier-league-2022-1298423/match-results"
@@ -29,12 +30,13 @@ def setup() -> webdriver:
 
 
 def obtain_games(browser: webdriver) -> list:
-    """
-    Obtains the href for each game element on the main IPL page.
-        Parameters:
-                browser(webdriver): A webdriver set on the main IPL page.
-        Returns:
-                hrefs (list): A list of all IPL game hrefs.
+    """Obtains the href for each game element on the main IPL page.
+
+    Args:
+        browser(webdriver): A webdriver set on the main IPL page.
+
+    Returns:
+        list: A list of all IPL game hrefs.
     """
     games = browser.find_elements(
         By.CSS_SELECTOR,
@@ -48,13 +50,17 @@ def obtain_games(browser: webdriver) -> list:
 
 
 def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
-    """
-    Obtains the specific game page and converts into a single dataframe.
-        Parameters:
-                browser(webdriver): A Chrome webdriver.
-                game (str): A string href for the specific game page.
-        Returns:
-                batting (Dataframe): A dataframe with all the batter data from that game.
+    """Obtains the specific game page and converts into a single dataframe.
+
+    Args:
+        browser(webdriver): A Chrome webdriver.
+        game (str): A string href for the specific game page.
+
+    Raises:
+        WebDriverException: webdriver fails to get the game href.
+
+    Returns:
+        Dataframe: A dataframe with all the batter data from that game.
     """
     failed_get = True
     while failed_get:
@@ -69,23 +75,38 @@ def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
     return batting
 
 
-def extract():
+def obtain_batting_results(browser: webdriver, games: list) -> pd.Dataframe:
+    """Loops through game pages and combines the data into a singular dataframe.
+
+    Args:
+        browser (webdriver): A Chrome webdriver.
+        games (list): A list of game hrefs.
+
+    Returns:
+        Dataframe: A dataframe of batting results.
     """
-    Obtains the game pages and creates a singular dataframe which is saved to a csv.
-        Parameters:
-                None.
-        Returns:
-                None.
-    """
-    browser = setup()
     batting_results = pd.DataFrame()
-    games = obtain_games(browser)
     for game in games:
         batters = obtain_batters(browser, game)
         if batting_results.empty is True:
             batting_results = batters
         else:
             batting_results = pd.concat([batting_results, batters], ignore_index=True)
+    return batting_results
+
+
+def extract():
+    """Obtains the game pages and creates a singular dataframe which is saved to a csv.
+
+    Args:
+        None.
+
+    Returns:
+        None.
+    """
+    browser = setup()
+    games = obtain_games(browser)
+    batting_results = obtain_batting_results(browser, games)
     browser.quit()
     batting_results.to_csv("./data/extracted_data.csv", index=False)
 

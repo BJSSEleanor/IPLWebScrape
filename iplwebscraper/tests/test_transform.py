@@ -41,12 +41,13 @@ from iplwebscraper.transform import (
 
 @pytest.fixture
 def base_dataframe() -> pd.DataFrame:
-    """
-    Defines an unclean, example dataframe for the tests.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an unclean, example dataframe for the tests.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "BATTING": [
@@ -266,12 +267,13 @@ def base_dataframe() -> pd.DataFrame:
 
 @pytest.fixture
 def cleaned_column_dataframe() -> pd.DataFrame:
-    """
-    Defines an example dataframe with dropped and renamed columns for the tests.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an example dataframe with dropped and renamed columns for the tests.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "Player": [
@@ -449,12 +451,13 @@ def cleaned_column_dataframe() -> pd.DataFrame:
 
 @pytest.fixture
 def clean_rows_dataframe() -> pd.DataFrame:
-    """
-    Defines an example dataframe with cleaned rows for the tests.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an example dataframe with cleaned rows for the tests.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "Player": [
@@ -490,12 +493,13 @@ def clean_rows_dataframe() -> pd.DataFrame:
 
 @pytest.fixture
 def sr_player_cleaned_dataframe() -> pd.DataFrame:
-    """
-    Defines an example dataframe with the cleaned rows and sr and player column for the tests.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an example dataframe with the cleaned rows and sr and player column for the tests.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "Player": [
@@ -542,12 +546,13 @@ def sr_player_cleaned_dataframe() -> pd.DataFrame:
 
 @pytest.fixture
 def new_column_dataframe() -> pd.DataFrame:
-    """
-    Defines an example dataframe with the not out column for the tests.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an example dataframe with the not out column for the tests.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "Player": [
@@ -596,12 +601,13 @@ def new_column_dataframe() -> pd.DataFrame:
 
 @pytest.fixture
 def cleaned_dataframe() -> pd.DataFrame:
-    """
-    Defines an example cleaned dataframe.
-        Parameters:
-                None.
-        Returns:
-                dataframe (Dataframe): A clean examplar dataframe.
+    """Defines an example cleaned dataframe.
+
+    Args:
+        None.
+
+    Returns:
+        Dataframe: A clean examplar dataframe.
     """
     example = {
         "Player": [
@@ -649,12 +655,13 @@ def cleaned_dataframe() -> pd.DataFrame:
 
 
 def test_drop_columns(base_dataframe: pd.DataFrame):
-    """
-    Tests drop_columns drops the correct columns.
-        Parameters:
-                base_dataframe(DataFrame) -> an unclean dataframe
-        Returns:
-                None.
+    """Tests drop_columns drops the correct columns.
+
+    Args:
+        base_dataframe(DataFrame) -> an unclean dataframe
+
+    Returns:
+        None.
     """
     cleaned_columns = drop_columns(base_dataframe)
     actual_columns = list(cleaned_columns.columns)
@@ -663,12 +670,13 @@ def test_drop_columns(base_dataframe: pd.DataFrame):
 
 
 def test_rename_columns(base_dataframe: pd.DataFrame):
-    """
-    Tests rename_columns renames the correct columns.
-        Parameters:
-                base_dataframe(DataFrame) -> an unclean dataframe
-        Returns:
-                None.
+    """Tests rename_columns renames the correct columns.
+
+    Args:
+        base_dataframe(DataFrame) -> an unclean dataframe
+
+    Returns:
+        None.
     """
     cleaned_columns = rename_columns(base_dataframe)
     actual_columns = list(cleaned_columns.columns)
@@ -690,13 +698,14 @@ def test_rename_columns(base_dataframe: pd.DataFrame):
 def test_clean_rows(
     cleaned_column_dataframe: pd.DataFrame, clean_rows_dataframe: pd.DataFrame
 ):
-    """
-    Tests clean_rows drops the correct rows.
-        Parameters:
-                cleaned_column_dataframe(DataFrame) -> the base_dataframe with renamed and the correct no. columns.
-                clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
-        Returns:
-                None.
+    """Tests clean_rows drops the correct rows.
+
+    Args:
+        cleaned_column_dataframe(DataFrame) -> the base_dataframe with renamed and the correct no. columns.
+        clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
+
+    Returns:
+        None.
     """
     actual_result = clean_rows(cleaned_column_dataframe)
     expected_result = clean_rows_dataframe
@@ -706,13 +715,14 @@ def test_clean_rows(
 def test_clean_sr(
     clean_rows_dataframe: pd.DataFrame, sr_player_cleaned_dataframe: pd.DataFrame
 ):
-    """
-    Tests clean_sr replaces the correct rows in the SR column.
-        Parameters:
-                clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
-                sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
-        Returns:
-                None.
+    """Tests clean_sr replaces the correct rows in the SR column.
+
+    Args:
+        clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
+        sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
+
+    Returns:
+        None.
     """
     actual_result = clean_sr(clean_rows_dataframe)
     expected_result = sr_player_cleaned_dataframe
@@ -722,13 +732,13 @@ def test_clean_sr(
 def test_clean_player(
     clean_rows_dataframe: pd.DataFrame, sr_player_cleaned_dataframe: pd.DataFrame
 ):
-    """
-    Tests clean_player replaces the correct rows in the Player column.
-        Parameters:
-                clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
-                sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
-        Returns:
-                None.
+    """Tests clean_player replaces the correct rows in the Player column.
+    Args:
+        clean_rows_dataframe(DataFrame) -> the cleaned_column_dataframe with the correct rows
+        sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
+
+    Returns:
+        None.
     """
     actual_result = clean_player(clean_rows_dataframe)
     expected_result = sr_player_cleaned_dataframe
@@ -736,12 +746,13 @@ def test_clean_player(
 
 
 def test_clarify_types(new_column_dataframe: pd.DataFrame):
-    """
-    Tests clarify_types changes the column types correctly.
-        Parameters:
-                new_column_dataframe(DataFrame) -> the sr_player_cleaned_dataframe with the Not Out column
-        Returns:
-                None.
+    """Tests clarify_types changes the column types correctly.
+
+    Args:
+        new_column_dataframe(DataFrame) -> the sr_player_cleaned_dataframe with the Not Out column
+
+    Returns:
+        None.
     """
     expected = "[string[python], string[python], dtype('int32'), dtype('int32'), dtype('int32'), dtype('int32'), dtype('int32'), dtype('float64'), dtype('int32')]"
     result = clarify_types(new_column_dataframe)
@@ -752,13 +763,14 @@ def test_clarify_types(new_column_dataframe: pd.DataFrame):
 def test_add_new_column(
     sr_player_cleaned_dataframe: pd.DataFrame, new_column_dataframe: pd.DataFrame
 ):
-    """
-    Tests add_not_out_column adds the new column with the correct values.
-        Parameters:
-                sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
-                new_column_dataframe(DataFrame) -> the sr_player_cleaned_dataframe with the Not Out column
-        Returns:
-                None.
+    """Tests add_not_out_column adds the new column with the correct values.
+
+    Args:
+        sr_player_cleaned_rows_dataframe(DataFrame) -> the clean_rows_dataframe with the correct replacements in SR and Player
+        new_column_dataframe(DataFrame) -> the sr_player_cleaned_dataframe with the Not Out column
+
+    Returns:
+        None.
     """
     actual = add_not_out_column(sr_player_cleaned_dataframe)
     expected = new_column_dataframe
@@ -766,13 +778,14 @@ def test_add_new_column(
 
 
 def test_clean(base_dataframe: pd.DataFrame, cleaned_dataframe: pd.DataFrame):
-    """
-    Tests clean function cleans the dataframe correctly.
-        Parameters:
-                base_dataframe(DataFrame) -> an unclean dataframe
-                cleaned_dataframe(DataFrame) -> the new_column_dataframe with the correct types.
-        Returns:
-                None.
+    """Tests clean function cleans the dataframe correctly.
+
+    Args:
+        base_dataframe(DataFrame) -> an unclean dataframe
+        cleaned_dataframe(DataFrame) -> the new_column_dataframe with the correct types.
+
+    Returns:
+        None.
     """
     expected = cleaned_dataframe
     actual = clean(base_dataframe)
@@ -780,13 +793,14 @@ def test_clean(base_dataframe: pd.DataFrame, cleaned_dataframe: pd.DataFrame):
 
 
 def test_group(base_dataframe: pd.DataFrame, cleaned_dataframe: pd.DataFrame):
-    """
-    Tests group function groups the dataframe correctly.
-        Parameters:
-                base_dataframe(DataFrame) -> an unclean dataframe
-                cleaned_dataframe(DataFrame) -> the new_column_dataframe with the correct types.
-        Returns:
-                None.
+    """Tests group function groups the dataframe correctly.
+
+    Args:
+        base_dataframe(DataFrame) -> an unclean dataframe
+        cleaned_dataframe(DataFrame) -> the new_column_dataframe with the correct types.
+
+    Returns:
+        None.
     """
     expected = cleaned_dataframe
     expected = expected.groupby("Player")[["R", "B", "4s", "6s", "Not Out"]].sum()

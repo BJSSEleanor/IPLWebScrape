@@ -21,35 +21,38 @@ from iplwebscraper.extract import (
 
 @pytest.fixture
 def browser():
-    """
-    Sets a fixture webdriver call set on the main IPL page.
-        Parameters:
-                None.
-        Returns:
-                browser (webdriver): A Chrome webdriver set on the main IPL page.
+    """Sets a fixture webdriver call set on the main IPL page.
+
+    Args:
+        None.
+
+    Returns:
+        webdriver: A Chrome webdriver set on the main IPL page.
     """
     browser = setup()
     return browser
 
 
 def test_setup(browser):
-    """
-    Tests the fixture webdriver get does not fail.
-        Parameters:
-                browser(webdriver) -> A Chrome webdriver set on the main IPL page.
-        Returns:
-                None
+    """Tests the fixture webdriver get does not fail.
+
+    Args:
+        browser(webdriver) -> A Chrome webdriver set on the main IPL page.
+
+    Returns:
+        None.
     """
     assert browser is not None
 
 
 def test_obtain_games_game_info_found(browser):
-    """
-    Tests the calls for individual games obtains some hrefs.
-        Parameters:
-                browser(webdriver) -> A Chrome webdriver set on the main IPL page.
-        Returns:
-                None
+    """Tests the calls for individual games obtains some hrefs.
+
+    Args:
+        browser(webdriver) -> A Chrome webdriver set on the main IPL page.
+
+    Returns:
+        None.
     """
     games = obtain_games(browser)
     assert len(games) > 0
@@ -57,12 +60,13 @@ def test_obtain_games_game_info_found(browser):
 
 @pytest.fixture
 def game(browser):
-    """
-    Sets a fixture webdriver call set on the first game page.
-        Parameters:
-                None.
-        Returns:
-                browser (webdriver): A Chrome webdriver set on the first game page.
+    """Sets a fixture webdriver call set on the first game page.
+
+    Args:
+        None.
+
+    Returns:
+        webdriver: A Chrome webdriver set on the first game page.
     """
     games = obtain_games(browser)
     game = games[0]
@@ -70,12 +74,13 @@ def game(browser):
 
 
 def test_obtain_batters(browser, game):
-    """
-    Tests if a dataframe with the expected shape is obtained from the first href.
-        Parameters:
-                browser(webdriver) -> A Chrome webdriver set on the first IPL game.
-        Returns:
-                None
+    """Tests if a dataframe with the expected shape is obtained from the first href.
+
+    Args:
+        browser(webdriver) -> A Chrome webdriver set on the first IPL game.
+
+    Returns:
+        None.
     """
     batters = obtain_batters(browser, game)
     assert batters.shape == (35, 10)

@@ -1,5 +1,4 @@
-"""
-Cleans a batter dataframe and groups it by batter.
+"""Cleans a batter dataframe and groups it by batter.
 Loads and saves the dataframe from/to a csv in the data folder.
 
 Functions:
@@ -21,36 +20,39 @@ import pandas as pd
 
 
 def drop_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Removes unwanted columns from the dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with unwanted columns removed.
+    """Removes unwanted columns from the dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with unwanted columns removed.
     """
     data = data.drop(columns=["Unnamed: 8", "Unnamed: 9"])
     return data
 
 
 def rename_columns(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Renames columns from the dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with columns renamed.
+    """Renames columns from the dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with columns renamed.
     """
     data = data.rename(columns={"BATTING": "Player", "Unnamed: 1": "Status"})
     return data
 
 
 def clean_rows(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans the rows of the Dataframe, removing unwanted rows.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with an additional column Not Out.
+    """Cleans the rows of the Dataframe, removing unwanted rows.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with an additional column Not Out.
     """
     data = data.dropna(inplace=False)
     indexes_to_drop: list = list(
@@ -65,24 +67,26 @@ def clean_rows(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_sr(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans the SR column of the Dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with an additional column Not Out.
+    """Cleans the SR column of the Dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with an additional column Not Out.
     """
     data.replace("-", 0, inplace=True)
     return data
 
 
 def clean_player(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans the Player column of the Dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with an additional column Not Out.
+    """Cleans the Player column of the Dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with an additional column Not Out.
     """
     data["Player"] = (
         data["Player"].str.replace(r"(†|\(c\))", "", regex=True).str.strip()
@@ -91,24 +95,26 @@ def clean_player(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_not_out_column(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Adds a new column to the dataframe, true if the Status column is "not out".
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with an additional column Not Out.
+    """Adds a new column to the dataframe, true if the Status column is "not out".
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with an additional column Not Out.
     """
     data["Not Out"] = np.where(data["Status"] == "not out", True, False)
     return data
 
 
 def clarify_types(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Specifies column types for the dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A dataframe of batters with columns type explicitly defined.
+    """Specifies column types for the dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe of batters with columns type explicitly defined.
     """
     data = data.astype(
         {
@@ -127,12 +133,13 @@ def clarify_types(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans a dataframe.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-            Returns:
-                df (DataFrame): A clean dataframe of batters.
+    """Cleans a dataframe.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A clean dataframe of batters.
     """
     data = drop_columns(data)
     data = rename_columns(data)
@@ -145,12 +152,13 @@ def clean(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def group(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Groups a dataframe by batter.
-        Parameters:
-                df (DataFrame): A clean dataframe of batters.
-            Returns:
-                df (DataFrame): A dataframe grouped by batter.
+    """Groups a dataframe by batter.
+
+    Parameters:
+        data (DataFrame): A clean dataframe of batters.
+
+    Returns:
+        DataFrame: A dataframe grouped by batter.
     """
     grouped_data: pd.DataFrame = data.groupby("Player")[
         ["R", "B", "4s", "6s", "Not Out"]
@@ -159,12 +167,13 @@ def group(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def transform(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Cleans and groups a dataframe by batter.
-        Parameters:
-                df (DataFrame): A dataframe of batters.
-        Returns:
-                df (DataFrame): A cleaned dataframe, grouped by batter.
+    """Cleans and groups a dataframe by batter.
+
+    Args:
+        data (DataFrame): A dataframe of batters.
+
+    Returns:
+        DataFrame: A cleaned dataframe, grouped by batter.
     """
     cleaned_data: pd.DataFrame = clean(data)
     grouped_data: pd.DataFrame = group(cleaned_data)
@@ -172,12 +181,13 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def obtain_and_transform():
-    """
-    Loads unclean batter csv into a dataframe, transforms it and saves it in a new csv.
-        Parameters:
-                None.
-        Returns:
-                None.
+    """Loads unclean batter csv into a dataframe, transforms it and saves it in a new csv.
+
+    Args:
+        None.
+
+    Returns:
+        None.
     """
     data = pd.read_csv("./data/extracted_data.csv")
     transformed_data = transform(data)
