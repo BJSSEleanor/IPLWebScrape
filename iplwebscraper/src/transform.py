@@ -12,8 +12,6 @@ Functions:
     clean(Dataframe) -> Dataframe
     group(Dataframe) -> Dataframe
     transform(Dataframe) -> Dataframe
-    obtain_and_transform(None) -> None
-
 """
 import numpy as np
 import pandas as pd
@@ -178,17 +176,3 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
     cleaned_data: pd.DataFrame = clean(data)
     grouped_data: pd.DataFrame = group(cleaned_data)
     return grouped_data
-
-
-def obtain_and_transform():
-    """Loads unclean batter csv into a dataframe, transforms it and saves it in a new csv.
-
-    Args:
-        None.
-
-    Returns:
-        None.
-    """
-    data = pd.read_csv("./data/extracted_data.csv")
-    transformed_data = transform(data)
-    transformed_data.to_csv("./data/transformed_data.csv")
