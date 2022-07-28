@@ -41,16 +41,13 @@ def obtain_games(browser: webdriver) -> list:
         browser(webdriver): A webdriver set on the main IPL page.
 
     Returns:
-        list: A list of all IPL game hrefs.
+        list[str]: A list of all IPL game hrefs.
     """
-    games = browser.find_elements(
+    games: list = browser.find_elements(
         By.CSS_SELECTOR,
         "div[class='ds-px-4 ds-py-3']",
     )
-    hrefs = []
-    for game in games:
-        href = (game.find_element(By.CSS_SELECTOR, "*")).get_attribute("href")
-        hrefs.append(href)
+    hrefs: list[str] = [game.find_element(By.CSS_SELECTOR, "*").get_attribute("href") for game in games]
     return hrefs
 
 
@@ -79,7 +76,7 @@ def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
     return batting
 
 
-def obtain_batting_results(browser: webdriver, games: list) -> pd.DataFrame:
+def obtain_batting_results(browser: webdriver, games: list[str]) -> pd.DataFrame:
     """Loops through game pages and combines the data into a singular dataframe.
 
     Args:
