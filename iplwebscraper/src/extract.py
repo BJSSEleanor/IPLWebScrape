@@ -61,9 +61,6 @@ def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
         browser(webdriver): A Chrome webdriver.
         game (str): A string href for the specific game page.
 
-    Raises:
-        WebDriverException: webdriver fails to get the game href.
-
     Returns:
         Dataframe: A dataframe with all the batter data from that game. Empty if href cannot be called.
     """
