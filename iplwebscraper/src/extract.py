@@ -65,18 +65,20 @@ def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
         WebDriverException: webdriver fails to get the game href.
 
     Returns:
-        Dataframe: A dataframe with all the batter data from that game.
+        Dataframe: A dataframe with all the batter data from that game. Empty if href cannot be called.
     """
-    failed_get = True
-    while failed_get:
+    tries = 3
+    while tries > 0:
         try:
             browser.get(game)
-            failed_get = False
+            batting = pd.concat(
+            [pd.read_html(game)[0], pd.read_html(game)[2]], ignore_index=True
+            )
+            tries = 0
         except WebDriverException:
-            failed_get = True
-    batting = pd.concat(
-        [pd.read_html(game)[0], pd.read_html(game)[2]], ignore_index=True
-    )
+            tries -= 1
+            if tries <= 0:
+                batting = pd.DataFrame()    
     return batting
 
 
