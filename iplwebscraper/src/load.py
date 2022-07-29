@@ -54,7 +54,7 @@ def load_csv(file_name: str) -> list:
     return data
 
 
-def define_tables(meta: MetaData) -> Table:
+def create_tables(meta: MetaData, engine) -> Table:
     """Defines the tables to be created.
 
     Args:
@@ -73,7 +73,7 @@ def define_tables(meta: MetaData) -> Table:
         Column("sixes", Integer),
         Column("not_out", Integer),
     )
-    return batters
+    meta.create_all(engine)
 
 
 class Batters(base):
@@ -83,9 +83,7 @@ class Batters(base):
         base (_DeclarativeBase): Needed for SQLAlchemy.
     """
     __tablename__ = "Batters"
-    __table_args__ = {"sqlite_autoincrement": True}
-    id = Column(Integer, primary_key=True, nullable=False)
-    player = Column(String(100), nullable=False)
+    player = Column(String(100), primary_key=True, nullable=False)
     runs = Column(Integer)
     balls = Column(Integer)
     fours = Column(Integer)
@@ -133,9 +131,11 @@ def load(file_name: str):
         file_name (str): The location of the csv.
     """
     engine, session, meta, base = setup()
-    batters = define_tables(meta)
-    meta.create_all(engine)
-    data = load_csv(file_name)
-    tabled_data = convert_to_mappings(data)
-    session.add_all(tabled_data)
+    create_tables(meta, engine)
+    csv_data = load_csv(file_name)
+    mapped_data = convert_to_mappings(csv_data)
+    session.add_all(mapped_data)
     session.commit()
+
+if __name__ == "__main__":
+    load("./data/transformed_data.csv")
