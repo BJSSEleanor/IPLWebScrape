@@ -15,6 +15,7 @@ sys.path.append(parentdir)
 
 from src.extract import extract
 from src.transform import transform
+from src.load import load
 
 
 dag = DAG(
@@ -39,6 +40,13 @@ def _transform_data():
    transformed_data.to_csv("./data/transformed_data.csv")
 
 
+def _load_data():
+   """Loads the batter data into a local sqlite db.
+   """
+   data = "./data/transformed_data.csv"
+   load(data)
+
+
 extract_data = PythonOperator(
    task_id="extract_data",
    python_callable=_extract_data,
@@ -53,10 +61,17 @@ transform_data = PythonOperator(
 )
 
 
+load_data = PythonOperator(
+   task_id="load_data",
+   python_callable=_load_data,
+   dag=dag,
+)
+
+
 notify = BashOperator(
    task_id="notify",
    bash_command='echo "The Indian Premier League data has been extracted and transformed."',
    dag=dag,
 )
 
-extract_data >> transform_data >> notify
+extract_data >> transform_data >> load_data >> notify
