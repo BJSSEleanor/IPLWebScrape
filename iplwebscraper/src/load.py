@@ -5,7 +5,7 @@ Functions:
     load_csv(str) -> list
     define_tables(MetaData) -> Table
     prepare_batters(list) -> Batters
-    convert_to_mappings(list[list]) -> list[Batters]
+    convert_to_mappings(list) -> list
     load(str) -> None
 
 Classes:
@@ -13,7 +13,6 @@ Classes:
 """
 # pylint: disable=redefined-outer-name
 # pylint: disable=unused-variable
-# pylint: disable=
 from sqlalchemy import MetaData, Table, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
@@ -28,10 +27,10 @@ def setup():
     """Sets up the sqlacademy engine, session, base and metadata.
 
     Returns:
-        Engine: _description_
-        Session:
-        MetaData
-        _DeclarativeBase
+        Engine: sqlalchemy engine.
+        Session: sqlalchemy session.
+        MetaData: sqlalchemy metadata.
+        _DeclarativeBase: sqlalchemy base.
     """
     engine = create_engine("sqlite:///data/ipl_2022.db")
     sess = sessionmaker(bind=engine)
@@ -48,7 +47,7 @@ def load_csv(file_name: str) -> list:
         file_name (str): The file path and name for the csv.
 
     Returns:
-        list[list]: A list of the file records.
+        list: A list of the file records.
     """
     csv_data: pd.DataFrame = pd.read_csv(file_name)
     data: list = csv_data.values.tolist()
@@ -83,7 +82,6 @@ class Batters(base):
     Args:
         base (_DeclarativeBase): Needed for SQLAlchemy.
     """
-
     __tablename__ = "Batters"
     __table_args__ = {"sqlite_autoincrement": True}
     id = Column(Integer, primary_key=True, nullable=False)
@@ -119,10 +117,10 @@ def convert_to_mappings(data: list) -> list:
     """Converts batting data to mappings.
 
     Args:
-        data (list[list]): A 2D list of batter information
+        data (list): A 2D list of batter information
 
     Returns:
-        list[Batters]: mappings of batter information
+        list: mappings of batter information
     """
     mapped_data = [prepare_batters(row) for row in data]
     return mapped_data
@@ -141,8 +139,3 @@ def load(file_name: str):
     tabled_data = convert_to_mappings(data)
     session.add_all(tabled_data)
     session.commit()
-
-
-if __name__ == "__main__":
-    file_name = "./data/transformed_data.csv"
-    load(file_name)
