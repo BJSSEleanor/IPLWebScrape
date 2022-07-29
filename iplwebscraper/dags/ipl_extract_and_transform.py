@@ -5,7 +5,7 @@ import airflow
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.python import PythonOperator
-import pandas as pd
+
 
 import os, sys
 
@@ -35,6 +35,7 @@ def _extract_data():
 def _transform_data():
    """Loads, cleans, transforms and saves the batter data.
    """
+   import pandas as pd
    data = pd.read_csv("./data/extracted_data.csv")
    transformed_data = transform(data)
    transformed_data.to_csv("./data/transformed_data.csv")

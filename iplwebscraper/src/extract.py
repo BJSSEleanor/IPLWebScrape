@@ -41,16 +41,13 @@ def obtain_games(browser: webdriver) -> list:
         browser(webdriver): A webdriver set on the main IPL page.
 
     Returns:
-        list: A list of all IPL game hrefs.
+        list[str]: A list of all IPL game hrefs.
     """
-    games = browser.find_elements(
+    games: list = browser.find_elements(
         By.CSS_SELECTOR,
         "div[class='ds-px-4 ds-py-3']",
     )
-    hrefs = []
-    for game in games:
-        href = (game.find_element(By.CSS_SELECTOR, "*")).get_attribute("href")
-        hrefs.append(href)
+    hrefs: list[str] = [game.find_element(By.CSS_SELECTOR, "*").get_attribute("href") for game in games]
     return hrefs
 
 
@@ -61,22 +58,21 @@ def obtain_batters(browser: webdriver, game: str) -> pd.DataFrame:
         browser(webdriver): A Chrome webdriver.
         game (str): A string href for the specific game page.
 
-    Raises:
-        WebDriverException: webdriver fails to get the game href.
-
     Returns:
-        Dataframe: A dataframe with all the batter data from that game.
+        Dataframe: A dataframe with all the batter data from that game. Empty if href cannot be called.
     """
-    failed_get = True
-    while failed_get:
+    tries = 3
+    while tries > 0:
         try:
             browser.get(game)
-            failed_get = False
+            batting = pd.concat(
+            [pd.read_html(game)[0], pd.read_html(game)[2]], ignore_index=True
+            )
+            tries = 0
         except WebDriverException:
-            failed_get = True
-    batting = pd.concat(
-        [pd.read_html(game)[0], pd.read_html(game)[2]], ignore_index=True
-    )
+            tries -= 1
+            if tries <= 0:
+                batting = pd.DataFrame()    
     return batting
 
 
