@@ -40,4 +40,5 @@ def load(file_name: str):
             if_exists="replace",
             method="multi",
             index=True,
-            index_label="PlayerID")
+            index_label="PlayerID",
+        )
